@@ -12,11 +12,16 @@ def main():
         page = browser.new_page(locale="ru-RU")
 
         try:
-            response = page.goto(
-                URL,
-                wait_until="domcontentloaded",
-                timeout=120000
-            )
+            try:
+    response = page.goto(
+        URL,
+        wait_until="commit",
+        timeout=30000
+    )
+    print("Ответ сайта получен")
+except Exception as e:
+    print("Не удалось открыть сайт:", repr(e))
+    raise
             page.wait_for_timeout(10000)
 
             print("Статус HTTP:", response.status if response else "нет ответа")
