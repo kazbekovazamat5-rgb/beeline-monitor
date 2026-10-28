@@ -12,8 +12,8 @@ def main():
         page = browser.new_page(locale="ru-RU")
 
         try:
-            page.goto(URL, wait_until="domcontentloaded", timeout=60000)
-            page.wait_for_timeout(5000)
+            page.goto(URL, wait_until="commit", timeout=120000)
+page.wait_for_timeout(10000)
 
             print("Заголовок страницы:", page.title())
             print("Адрес страницы:", page.url)
