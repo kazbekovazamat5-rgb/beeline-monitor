@@ -20,7 +20,20 @@ def main():
                 print("Фрейм", i, "| адрес:", frame.url)
 
             print("HTML страницы:")
-            print(page.content()[:6000])
+            
+            html = page.content()
+            for word in ["api", "number", "phone", "search", "graphql", "flocktory"]:
+                print(f"\n--- {word} ---")
+                pos = 0
+                count = 0
+                while True:
+                    pos = html.lower().find(word, pos)
+                    if pos == -1 or count >= 3:
+                        break
+                    print(html[max(0, pos-150):pos+250])
+                    pos += len(word)
+                    count += 1
+
 
         except Exception as e:
             print("Ошибка:", repr(e))
