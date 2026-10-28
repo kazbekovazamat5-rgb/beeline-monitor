@@ -20,8 +20,9 @@ def main():
             print("HTTP:", response.status if response else "нет ответа")
             print("Заголовок:", page.title())
             print("Адрес:", page.url)
-            print("Текст страницы:")
-            print(page.locator("body").inner_text(timeout=15000)[:3000])
+            print("Заголовок:", page.title())
+print("Текущий адрес:", page.url)
+print("Проверка загрузки завершена")
 
         finally:
             browser.close()
