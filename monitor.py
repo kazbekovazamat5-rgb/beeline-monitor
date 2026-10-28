@@ -4,7 +4,7 @@ from playwright.sync_api import sync_playwright
 URL = "https://moskva.beeline.ru/customers/products/krasivie-nomera/"
 
 def main():
-    print("Проверяем каталог Билайн в Москве")
+    print("Проверяем элементы поиска Билайна")
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
@@ -18,27 +18,34 @@ def main():
             )
 
             print("HTTP:", response.status if response else "нет ответа")
-            print("Заголовок:", page.title())
-
             page.wait_for_timeout(5000)
 
-            fields = page.locator("input")
-            print("Количество полей ввода:", fields.count())
+            print("\n--- ПОЛЯ ВВОДА ---")
+            fields = page.locator("input").all()
 
-            for i in range(fields.count()):
-                field = fields.nth(i)
+            for i, field in enumerate(fields):
                 print(
-                    "Поле", i,
-                    "| placeholder:", field.get_attribute("placeholder"),
-                    "| type:", field.get_attribute("type"),
-                    "| aria-label:", field.get_attribute("aria-label")
+                    f"Поле {i}:",
+                    "type =", field.get_attribute("type"),
+                    "| aria-label =", field.get_attribute("aria-label"),
+                    "| placeholder =", field.get_attribute("placeholder"),
+                    "| role =", field.get_attribute("role")
                 )
 
-            buttons = page.locator("button")
-            print("Количество кнопок:", buttons.count())
+            print("\n--- КНОПКИ ---")
+            buttons = page.locator("button").all()
 
-            for i in range(min(buttons.count(), 30)):
-                print("Кнопка", i, ":", buttons.nth(i).inner_text())
+            for i, button in enumerate(buttons):
+                try:
+                    print(
+                        f"Кнопка {i}:",
+                        "текст =", repr(button.inner_text(timeout=1500)),
+                        "| aria-label =", button.get_attribute("aria-label"),
+                        "| title =", button.get_attribute("title"),
+                        "| HTML =", (button.get_attribute("outerHTML") or "")[:300]
+                    )
+                except Exception as e:
+                    print(f"Кнопка {i}: ошибка чтения: {e}")
 
         finally:
             browser.close()
